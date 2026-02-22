@@ -926,7 +926,9 @@
                 const badge = document.getElementById("completion-status");
                 if (p.completed) {
                     badge.classList.add('done');
+
                     badge.querySelector('.status-text').textContent = 'Completed';
+                    document.querySelector(".submit-btn").style.display='none'
                 }
 
                 // Test cases
@@ -1022,9 +1024,16 @@
     }
 
     function submitSolution() {
-        const code = editor?.getValue().trim();
-        if (!code) { alert("Please write some code before submitting."); return; }
-        alert("Solution submitted!");
+        fetch(`/api/problems/complete/{{p_type}}/{{p_id}}` , {method:"POST"}).then(res=>res.json()).then(data=>{
+            if(data.success){
+               alert("Solution Submitted")
+            }
+            else{
+                alert("Faied to Submit")
+            }
+        }).catch(e=>{
+            alert("An Error Occured On Submitting ..")
+        })
     }
 
     window.addEventListener('load', function(){
