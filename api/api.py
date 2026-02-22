@@ -100,3 +100,23 @@ def program_run():
     except:
         return jsonify({"error":"Internal Server Error"}) , 500
 
+
+
+@Api.route("/complete/<p_type>/<p_id>" , methods=['POST'])
+def Complete_Problem(p_type , p_id):
+    try:
+        if p_type not in PROBLEMS_SECTIONS:
+            return jsonify({"success":False , "error":"Invalid !"}) , 400
+        
+        PROBLMES.find_one_and_update({"section_title":p_type} , {
+            "$set":{
+                "problems.$[arr].completed":True
+            }
+        } , array_filters=[{"arr.problem_id":int(p_id)}])
+
+        return jsonify({"success":True , "msg":"Document Updated"})
+    except Exception as e:
+        print(e)
+        return jsonify({"success":False})
+
+
